@@ -13,6 +13,7 @@ import com.felipe.domain.Cidade;
 import com.felipe.domain.Cliente;
 import com.felipe.domain.Endereco;
 import com.felipe.domain.Estado;
+import com.felipe.domain.ItemPedido;
 import com.felipe.domain.Pagamento;
 import com.felipe.domain.PagamentoComBoleto;
 import com.felipe.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.felipe.repositories.CidadeRepository;
 import com.felipe.repositories.ClienteRepository;
 import com.felipe.repositories.EnderecoRepository;
 import com.felipe.repositories.EstadoRepository;
+import com.felipe.repositories.ItemPedidoRepository;
 import com.felipe.repositories.PagamentoRepository;
 import com.felipe.repositories.PedidoRepository;
 import com.felipe.repositories.ProdutoRepository;
@@ -48,6 +50,8 @@ public class ProjetoFelipeApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ProjetoFelipeApplication.class, args);
@@ -81,8 +85,14 @@ public class ProjetoFelipeApplication implements CommandLineRunner {
 		Pagamento pag1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
 		Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2018 10:10"), null);
 		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
 		ped1.setPagamento(pag1);
 		ped2.setPagamento(pag2);
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));	
 		
 		cat1.getProdutos().addAll(Arrays.asList(p1,p2,p3));
 		cat2.getProdutos().addAll(Arrays.asList(p2));
@@ -90,6 +100,9 @@ public class ProjetoFelipeApplication implements CommandLineRunner {
 		p1.getCategorias().addAll(Arrays.asList(cat1));
 		p2.getCategorias().addAll(Arrays.asList(cat1,cat2));
 		p3.getCategorias().addAll(Arrays.asList(cat1));
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
 		
 		e1.getCidades().addAll(Arrays.asList(c1));
 		e2.getCidades().addAll(Arrays.asList(c2,c3));
@@ -106,6 +119,7 @@ public class ProjetoFelipeApplication implements CommandLineRunner {
 		enderecoRepository.saveAll(Arrays.asList(end1, end2));
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pag1, pag2));
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 		
 	}
 
