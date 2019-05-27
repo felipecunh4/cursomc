@@ -20,9 +20,13 @@ import com.felipe.repositories.CategoriaRepository;
 @Service
 public class CategoriaService {
 	
-	@Autowired
 	private CategoriaRepository repo;
 	
+	@Autowired
+	public CategoriaService(CategoriaRepository repo) {
+		this.repo = repo;
+	}
+
 	public Categoria buscar(Integer id) {
 		Optional<Categoria> obj = repo.findById(id);
 		
